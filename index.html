@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note to Self</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f3f4f6; margin: 0; }
+        form { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
+        input, textarea, button { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        textarea { height: 120px; resize: none; }
+        button { background-color: #4f46e5; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #4338ca; }
+    </style>
+</head>
+<body>
+
+<form id="emailForm">
+  <h2>Kirim Pesan untuk Dirimu</h2>
+  <input type="email" id="email" placeholder="Email kamu" required>
+  <textarea id="pesan" placeholder="Tulis pesan untuk dirimu..." required></textarea>
+  <button type="submit">Kirim ke Diriku</button>
+</form>
+
+<script>
+  document.getElementById('emailForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const pesan = document.getElementById('pesan').value;
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, pesan })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Pesan berhasil dikirim!');
+        document.getElementById('emailForm').reset();
+      } else {
+        alert('Gagal: ' + result.error);
+      }
+    } catch (error) {
+      alert('Terjadi kesalahan sistem.');
+    }
+  });
+</script>
+</body>
+</html>
